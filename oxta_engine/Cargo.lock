@@ -263,19 +263,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77ce24cb58228fbb8aa041425bb1050850ac19177686ea6e0f41a70416f56fdb"
 
 [[package]]
-name = "geodesic_engine"
-version = "0.1.0"
-dependencies = [
- "bytes",
- "clap",
- "memmap2",
- "pyo3",
- "rkyv",
- "tokio",
- "usearch",
-]
-
-[[package]]
 name = "hashbrown"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -406,6 +393,19 @@ name = "once_cell_polyfill"
 version = "1.70.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "384b8ab6d37215f3c5301a95a4accb5d64aa607f1fcb26a11b5303878451b4fe"
+
+[[package]]
+name = "oxta_mem"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "clap",
+ "memmap2",
+ "pyo3",
+ "rkyv",
+ "tokio",
+ "usearch",
+]
 
 [[package]]
 name = "parking_lot"

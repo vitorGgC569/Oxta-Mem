@@ -1,4 +1,4 @@
-use geodesic_engine::engine::GeodesicEngine;
+use oxta_mem::engine::GeodesicEngine;
 use std::time::Instant;
 
 fn main() {

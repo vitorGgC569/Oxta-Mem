@@ -1,5 +1,5 @@
-use geodesic_engine::engine::GeodesicEngine;
-use geodesic_engine::server::RespServer;
+use oxta_mem::engine::GeodesicEngine;
+use oxta_mem::server::RespServer;
 use std::sync::{Arc, Mutex};
 use clap::Parser;
 
