@@ -1,145 +1,125 @@
-# Oxta Mem
+# 🌌 Oxta-Mem (Geodesic Memory)
 **Industrial-Grade 4D Causal Memory for AI**
 
+[![PyPI version](https://badge.fury.io/py/oxta-mem.svg)](https://pypi.org/project/oxta-mem/)
 ![Status](https://img.shields.io/badge/Status-Stable-green)
 ![Language](https://img.shields.io/badge/Rust-Inside-orange)
 ![Protocol](https://img.shields.io/badge/Protocol-RESP-red)
 
-The Geodesic Memory Engine is a high-performance, persistent memory graph designed to give AI models "Time-Travel" capabilities without retraining. Unlike Vector Databases that search by *similarity*, Geodesic Engine searches by *causality* and *time*.
+Oxta-Mem is a high-performance, persistent memory graph designed to give AI agents **"Time-Travel"** capabilities. Unlike Vector Databases that search by *similarity*, Oxta-Mem organizes information by **causality**, **time**, and **depth (4D)**.
+
+Built with a high-performance Rust engine and exposed via an intuitive Python SDK.
+
+---
 
 ## 🚀 Key Features
 
-*   **Time Travel:** Retrieve the exact state of any variable at any point in history.
-*   **4D Graph Structure:** Nodes are linked causally (Merkle-DAG), not just stored as a list.
+*   **Time Travel:** Retrieve the exact causal history of any variable or agent state.
+*   **4D Causal Graph:** Nodes are linked in a Merkle-DAG structure, ensuring data integrity and lineage.
 *   **Zero-Copy Persistence:** Uses `mmap` and `rkyv` for instant startup and RAM-speed access backed by disk.
-*   **Universal Compatibility:** Speaks the **Redis (RESP)** protocol. Works with any Redis client.
-*   **Python Bindings:** Plug-and-play integration with PyTorch, TensorFlow, and LangChain via `pyo3`.
-
-## ⚡ Performance
-
-Benchmarks running on standard hardware:
-
-*   **Write Throughput:** > 300,000 writes/sec (Append-Only Log)
-*   **Read Latency (P99):** ~3 microseconds
-*   **Startup Time:** < 10ms (Zero-Copy)
-
-> "The engine navigates millions of causal steps effectively instantly due to Arena Allocation and CPU Prefetching."
-
-## 🛠️ Quick Start (Docker)
-
-The easiest way to run the engine is via Docker.
-
-### Prerequisites
-*   Docker
-*   Docker Compose (Optional)
-
-### Running with Docker CLI
-
-1.  **Build the image:**
-    ```bash
-    docker build -t geodesic-engine .
-    ```
-
-2.  **Run the container:**
-    ```bash
-    docker run -d -p 6379:6379 -v $(pwd)/data:/data --name geodesic geodesic-engine
-    ```
-
-3.  **Test connection (using redis-cli):**
-    ```bash
-    redis-cli -p 6379 PING
-    # Output: PONG
-
-    redis-cli -p 6379 SET user:1 "Alice"
-    # Output: OK
-
-    redis-cli -p 6379 GET user:1
-    # Output: "Alice"
-    ```
-
-### Running with Docker Compose
-
-1.  **Start the service:**
-    ```bash
-    docker-compose up -d
-    ```
-
-2.  **Stop the service:**
-    ```bash
-    docker-compose down
-    ```
-
-The database file will be persisted in the `./data` directory on your host machine.
+*   **Vector Integration:** Hybrid search combining Causal retrieval with `usearch` vector similarity.
+*   **Universal Compatibility:** Native Python SDK + Redis (RESP) protocol support.
+*   **LangChain Ready:** Integrated retrievers for seamless use with LLM frameworks.
 
 ---
 
-## 🏗️ Manual Build (Rust)
+## ⚡ Performance (Verified)
 
-If you prefer running "bare metal" or want to develop the core:
+*   **Native Write Throughput:** ~260,000+ ops/sec (1KB payloads)
+*   **Native Read Latency:** ~1.4 - 3.0 µs (Sub-microsecond raw access)
+*   **Python/Neural Throughput:** ~50,000 - 90,000 ops/sec
+*   **Startup Time:** < 5ms (Zero-Copy/mmap)
 
-### Prerequisites
-*   Rust (latest stable)
-*   Cargo
+---
 
-### Installation
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-repo/geodesic-engine.git
-    cd geodesic-engine
-    ```
-
-2.  **Build and Run:**
-    ```bash
-    cd geodesic_engine
-    cargo run --release -- --port 6379 --db-path ./my_memory.db --size-mb 1024
-    ```
-
-### Running Benchmarks
-To reproduce the performance metrics:
+## 🛠️ Installation
 
 ```bash
-cd geodesic_engine
-cargo run --release --bin benchmark
+pip install oxta-mem
 ```
 
 ---
 
-## 🐍 Python Integration (AI/ML)
+## 🐍 Quick Start (Python)
 
-You can use the engine directly from Python.
+### 1. High-Level AI Memory (Neural Layer)
+Perfect for AI agents tracking variables with historical context.
 
-### Option 1: Via Redis Client (Recommended for Production)
 ```python
-import redis
+import oxta_mem
+import torch
 
-# Connect to Geodesic Engine
-r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+# Initialize the 4D Memory Core
+core = oxta_mem.GeodesicMemoryCore()
 
-# Write Event
-r.set("sensor_X", "High Pressure")
+# Record a state (auto-links to previous states of 'agent_alpha')
+state_vector = torch.randn(128)
+core.write("agent_alpha", state_vector)
 
-# Read Current State
-print(r.get("sensor_X"))
+# Time Travel: Read the latest state
+latest = core.read_latest("agent_alpha")
 ```
 
-### Option 2: Native Bindings (High Performance / Embedded)
-To build the Python extension:
-```bash
-cd geodesic_engine
-maturin develop --release
-```
+### 2. Industrial SDK (Flexible Persistence)
+Use the `GeodesicClient` to manage complex data structures with Rust-speed.
 
-Usage:
 ```python
-from geodesic_engine import PyGeodesicEngine
+from oxta_mem import GeodesicClient
 
-engine = PyGeodesicEngine("local_store.db", 100)
-engine.write("var_a", b"some_data")
-print(engine.read_latest("var_a"))
+# Use 'native' driver for the embedded Rust engine
+client = GeodesicClient(driver="native", db_path="geodesic.db", size_mb=500)
+
+# Save any Python object (Dicts, Lists, NumPy)
+client.save("system_config", {"mode": "causal", "version": 1.0})
+
+# Recall causal history (last 5 steps)
+history = client.recall_history("system_config", depth=5)
 ```
 
-## 📚 Documentation
+### 3. Native Rust Engine (Maximum Performance)
+Direct access to the underlying Merkle-DAG engine.
+
+```python
+import oxta_mem
+
+engine = oxta_mem.PyGeodesicEngine("memory.db", 1024) # 1GB arena
+engine.write("key_0", b"binary_payload")
+data = engine.read_latest("key_0")
+```
+
+---
+
+## 🔗 LangChain Integration
+
+Supercharge your RAG with causal context instead of just similarity snippets.
+
+```python
+from oxta_mem import GeodesicClient, GeodesicCausalRetriever
+
+client = GeodesicClient(driver="native")
+retriever = GeodesicCausalRetriever(client=client, depth=10)
+
+# The LLM now receives the causal timeline of 'Market_Trend'
+docs = retriever.get_relevant_documents("Market_Trend")
+```
+
+---
+
+## 🏗️ Architecture
+
+Oxta-Mem operates on a **Geodesic Mapping** principle:
+1.  **Arena Allocation:** Pre-allocated memory files for zero fragmentation.
+2.  **Merkle-Linage:** Every write generates a DAG edge to the previous state.
+3.  **Hybrid Indexing:** Causal traversal + HNSW Vector Search.
+
+---
+
+## 📚 Documentation & Roadmap
 *   [Scientific Proof (Big-O Analysis)](docs/SCIENTIFIC_PROOF.md)
 *   [Engineering Roadmap](ROADMAP.md)
 *   [TLA+ Verification](docs/tla/GeodesicMemory.tla)
+
+---
+
+## 📄 License
+MIT License. Built for the era of Autonomus Agents.
