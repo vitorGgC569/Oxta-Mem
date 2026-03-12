@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  geodesic-engine:
+    build: .
+    image: geodesic-engine:latest
+    container_name: geodesic_engine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    command: ["--port", "6379", "--db-path", "/data/geodesic.db", "--size-mb", "1024"]
+
+  # Optional: Redis CLI for testing
+  # redis-cli:
+  #   image: redis:latest
+  #   command: redis-cli -h geodesic-engine -p 6379 PING
+  #   depends_on:
+  #     - geodesic-engine
