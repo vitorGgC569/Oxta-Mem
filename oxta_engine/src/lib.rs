@@ -6,7 +6,7 @@ use pyo3::prelude::*;
 use crate::engine::GeodesicEngine;
 
 #[pymodule]
-fn geodesic_engine(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn native(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<PyGeodesicEngine>()?;
     Ok(())
 }

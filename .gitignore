@@ -1,3 +1,23 @@
-geodesic_engine/target/
+# Rust
+oxta_engine/target/
+oxta_engine/Cargo.lock
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+dist/
+build/
+*.egg-info/
+
+# Databases
+*.db
+*.usearch_index
+*.meta
+
+# Verification/Bench scripts
+verify_pypi_install.py
+bench_installed.py
+oxta_mem_legacy.py
+bench_final.db*
+verify_native.db*

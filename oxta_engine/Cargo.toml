@@ -1,7 +1,11 @@
 [package]
 name = "oxta_mem"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
+
+[lib]
+name = "oxta_mem"
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 bytes = "1.11.0"
