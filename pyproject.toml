@@ -11,6 +11,7 @@ requires-python = ">=3.8"
 authors = [
     { name = "vitorGgC569" }
 ]
+license = "MIT"
 dependencies = [
     "redis",
     "numpy",

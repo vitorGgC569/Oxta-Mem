@@ -4,6 +4,7 @@ import torch.optim as optim
 import numpy as np
 import oxta_mem
 import os
+import time
 
 # 1. Define a Simple Model
 class SimpleMLP(nn.Module):
@@ -34,8 +35,14 @@ def train():
     optimizer = optim.Adam(model.parameters(), lr=0.01)
     criterion = nn.BCELoss()
     
-    epochs = 5
-    for epoch in range(epochs):
+    start_time = time.time()
+    duration = 180
+    epoch = 0
+    
+    print(f"Training for {duration} seconds...")
+    
+    while time.time() - start_time < duration:
+        epoch += 1
         # Forward pass
         outputs = model(X)
         loss = criterion(outputs, Y)
@@ -45,14 +52,14 @@ def train():
         loss.backward()
         optimizer.step()
         
-        print(f"Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}")
+        if epoch % 100 == 0:
+            print(f"Epoch {epoch}, Time Left: {int(duration - (time.time() - start_time))}s, Loss: {loss.item():.4f}")
         
         # STORE CAUSAL STATE:
         # We flatten the model weights into a single vector to save as a 'state snapshot'
         all_params = torch.cat([p.view(-1) for p in model.parameters()]).detach()
         
-        # Save to geodesic memory (auto-links causally to previous epoch)
-        # We use the library installed via pip
+        # Save to geodesic memory
         memory.write("model_weights", all_params)
         
     print("\nTraining complete. Verifying Causal Memory Recall...")
